@@ -7,16 +7,13 @@ export default function AddSchool() {
   const [message, setMessage] = useState("");
 
   const onSubmit = async (data) => {
-    const formData = new FormData();
-    for (let key in data) {
-      formData.append(key, data[key]);
-    }
-
     try {
       const res = await fetch("/api/addSchool", {
         method: "POST",
-        body: formData,
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data),
       });
+
       if (res.ok) {
         setMessage("✅ School added successfully!");
         reset();
@@ -33,7 +30,7 @@ export default function AddSchool() {
     <div style={{ padding: "20px" }}>
       <h1>Add School</h1>
 
-      {/* Back to list button */}
+      {/* Button to navigate to Show Schools */}
       <Link href="/showSchools">
         <button
           style={{
@@ -52,7 +49,6 @@ export default function AddSchool() {
 
       <form
         onSubmit={handleSubmit(onSubmit)}
-        encType="multipart/form-data"
         style={{
           display: "flex",
           flexDirection: "column",
@@ -66,7 +62,10 @@ export default function AddSchool() {
         <input placeholder="State" {...register("state", { required: true })} />
         <input placeholder="Contact" {...register("contact", { required: true })} />
         <input type="email" placeholder="Email" {...register("email_id", { required: true })} />
-        <input type="file" {...register("image")} />
+        <input placeholder="Image URL (e.g. https://picsum.photos/300)"
+  {...register("image", { required: true })}
+/>
+
 
         <button
           type="submit"
@@ -76,6 +75,7 @@ export default function AddSchool() {
             color: "white",
             border: "none",
             borderRadius: "5px",
+            cursor: "pointer",
           }}
         >
           ➕ Add School
